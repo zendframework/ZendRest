@@ -8,7 +8,7 @@
  * @package   Zend_Rest
  */
 
-namespace Zend\Rest\Client;
+namespace ZendRest\Client;
 
 use IteratorAggregate;
 
@@ -34,7 +34,7 @@ class Result implements IteratorAggregate
      * Constructor
      *
      * @param string $data XML Result
-     * @throws \Zend\Rest\Client\Exception\ResultException
+     * @throws \ZendRest\Client\Exception\ResultException
      * @return void
      */
     public function __construct($data)
@@ -85,7 +85,7 @@ class Result implements IteratorAggregate
      * Get Property Overload
      *
      * @param string $name
-     * @return null|SimpleXMLElement|array Null if not found, SimpleXMLElement if only one value found, array of \Zend\Rest\Client\Result objects otherwise
+     * @return null|SimpleXMLElement|array Null if not found, SimpleXMLElement if only one value found, array of \ZendRest\Client\Result objects otherwise
      */
     public function __get($name)
     {

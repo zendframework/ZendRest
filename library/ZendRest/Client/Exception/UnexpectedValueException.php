@@ -8,9 +8,9 @@
  * @package   Zend_Rest
  */
 
-namespace Zend\Rest\Client\Exception;
+namespace ZendRest\Client\Exception;
 
-use Zend\Rest\Exception;
+use ZendRest\Exception;
 
 class UnexpectedValueException extends Exception\UnexpectedValueException implements
     ExceptionInterface

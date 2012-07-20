@@ -8,9 +8,9 @@
  * @package   Zend_Rest
  */
 
-namespace Zend\Rest\Client\Exception;
+namespace ZendRest\Client\Exception;
 
-use Zend\Rest\Exception\ExceptionInterface as Exception;
+use ZendRest\Exception\ExceptionInterface as Exception;
 
 /**
  * Zend_Rest_Server_Exception

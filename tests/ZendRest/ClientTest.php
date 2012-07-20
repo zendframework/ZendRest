@@ -8,9 +8,9 @@
  * @package   Zend_Rest
  */
 
-namespace ZendTest\Rest;
+namespace ZendRestTest;
 
-use Zend\Rest\Client;
+use ZendRest\Client;
 use Zend\Uri;
 use Zend\Http\Response;
 
@@ -72,7 +72,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
         $rest = new Client\RestClient();
 
-        $this->setExpectedException('Zend\Rest\Client\Exception\UnexpectedValueException', 'URI object must be set before performing call');
+        $this->setExpectedException('ZendRest\Client\Exception\UnexpectedValueException', 'URI object must be set before performing call');
         $response = $rest->restGet('/rest/');
     }
 
@@ -273,7 +273,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
      */
     public function testInvalidXmlInClientResultLeadsToException()
     {
-        $this->setExpectedException('Zend\Rest\Client\Exception\ResultException', 'REST Response Error');
+        $this->setExpectedException('ZendRest\Client\Exception\ResultException', 'REST Response Error');
         $result = new Client\Result("invalidxml");
     }
 }

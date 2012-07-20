@@ -8,9 +8,9 @@
  * @package   Zend_Rest
  */
 
-namespace ZendTest\Rest;
+namespace ZendRestTest;
 
-use Zend\Rest\Client;
+use ZendRest\Client;
 
 /**
  * Test cases for Zend_Rest_Server

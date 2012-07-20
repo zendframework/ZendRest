@@ -8,7 +8,7 @@
  * @package   Zend_Rest
  */
 
-namespace Zend\Rest\Client\Exception;
+namespace ZendRest\Client\Exception;
 
 /**
  * REST client result exception

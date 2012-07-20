@@ -8,7 +8,7 @@
  * @package   Zend_Rest
  */
 
-namespace Zend\Rest\Exception;
+namespace ZendRest\Exception;
 
 /**
  * @category   Zend

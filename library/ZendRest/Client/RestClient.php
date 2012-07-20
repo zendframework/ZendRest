@@ -8,7 +8,7 @@
  * @package   Zend_Rest
  */
 
-namespace Zend\Rest\Client;
+namespace ZendRest\Client;
 
 use Zend\Http\Client as HttpClient;
 use Zend\Service\AbstractService;
@@ -235,7 +235,7 @@ class RestClient extends AbstractService
      *
      * @param string $method Method name
      * @param array $args Method args
-     * @return \Zend\Rest\Client\RestClient_Result|\Zend\Rest\Client\RestClient \Zend\Rest\Client\RestClient if using
+     * @return \ZendRest\Client\RestClient_Result|\ZendRest\Client\RestClient \ZendRest\Client\RestClient if using
      * a remote method, Zend_Rest_Client_Result if using an HTTP request method
      */
     public function __call($method, $args)
