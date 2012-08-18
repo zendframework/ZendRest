@@ -11,7 +11,6 @@
 namespace ZendRest\Client;
 
 use Zend\Http\Client as HttpClient;
-use Zend\Service\AbstractService;
 use Zend\Uri;
 
 /**
@@ -19,7 +18,7 @@ use Zend\Uri;
  * @package    Zend_Rest
  * @subpackage Client
  */
-class RestClient extends AbstractService
+class RestClient
 {
     /**
      * Data for the query
