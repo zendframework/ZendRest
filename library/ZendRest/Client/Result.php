@@ -100,9 +100,9 @@ class Result implements IteratorAggregate
             return null;
         } elseif ($count == 1) {
             return $result[0];
-        } else {
-            return $result;
         }
+
+        return $result;
     }
 
     /**
@@ -119,13 +119,12 @@ class Result implements IteratorAggregate
         if (null !== ($value = $this->__get($method))) {
             if (!is_array($value)) {
                 return $this->toValue($value);
-            } else {
-                $return = array();
-                foreach ($value as $element) {
-                    $return[] = $this->toValue($element);
-                }
-                return $return;
             }
+            $return = array();
+            foreach ($value as $element) {
+                $return[] = $this->toValue($element);
+            }
+            return $return;
         }
 
         return null;
@@ -178,9 +177,9 @@ class Result implements IteratorAggregate
             return true;
         } elseif (ctype_alpha($status) && $status != 'success') {
             return false;
-        } else {
-            return (bool) $status;
         }
+
+        return (bool) $status;
     }
 
     public function isError()
@@ -188,9 +187,9 @@ class Result implements IteratorAggregate
         $status = $this->getStatus();
         if ($status) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public function isSuccess()
@@ -198,9 +197,9 @@ class Result implements IteratorAggregate
         $status = $this->getStatus();
         if ($status) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
@@ -215,13 +214,14 @@ class Result implements IteratorAggregate
         if (!$this->getStatus()) {
             $message = $this->_sxml->xpath('//message');
             return (string) $message[0];
+        }
+
+        $result = $this->_sxml->xpath('//response');
+
+        if (count($result) > 1) {
+            return (string) "An error occured.";
         } else {
-            $result = $this->_sxml->xpath('//response');
-            if (count($result) > 1) {
-                return (string) "An error occured.";
-            } else {
-                return (string) $result[0];
-            }
+            return (string) $result[0];
         }
     }
 }
