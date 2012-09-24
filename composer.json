@@ -21,7 +21,12 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-http": "self.version",
-        "zendframework/zend-uri": "self.version"
+        "zendframework/zend-http": ">=2.0.0",
+        "zendframework/zend-uri": ">=2.0.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
     }
 }
