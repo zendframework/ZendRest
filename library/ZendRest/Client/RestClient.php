@@ -7,53 +7,67 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  * @package   Zend_Rest
  */
-
 namespace ZendRest\Client;
 
 use Zend\Http\Client as HttpClient;
 use Zend\Uri;
+use ZendRest\Client\Exception\ResultException;
 
 /**
- * @category   Zend
- * @package    Zend_Rest
+ *
+ * @category Zend
+ * @package Zend_Rest
  * @subpackage Client
  */
 class RestClient
 {
+
     /**
      * Data for the query
+     *
      * @var array
      */
     protected $data = array();
 
     /**
      * URI of this web service
+     *
      * @var Uri\Uri
      */
     protected $uri = null;
 
     /**
+     *
      * @var HttpClient
      */
     protected $httpClient;
 
     /**
+     * Type of service response string
+     *
+     * @var string
+     */
+    protected $responseType;
+
+    /**
      * Constructor
      *
-     * @param string|Uri\Uri $uri URI for the web service
+     * @param string|Uri\Uri $uri
+     *            URI for the web service
      * @return void
      */
-    public function __construct($uri = null)
+    public function __construct($uri = null, $reponseType = Result::TYPE_JSON)
     {
-        if (!empty($uri)) {
+        if (! empty($uri)) {
             $this->setUri($uri);
+            $this->setReturnType($reponseType);
         }
     }
 
     /**
      * Set HTTP client instance to use with this service instance
      *
-     * @param  HttpClient $client
+     * @param HttpClient $client
      * @return RestClient
      */
     public function setHttpClient(HttpClient $client)
@@ -81,7 +95,8 @@ class RestClient
     /**
      * Set the URI to use in the request
      *
-     * @param  string|Uri\Uri $uri URI for the web service
+     * @param string|Uri\Uri $uri
+     *            URI for the web service
      * @return RestClient
      */
     public function setUri($uri)
@@ -106,29 +121,62 @@ class RestClient
     }
 
     /**
+     * Retrive the service response type
+     *
+     * @return string
+     */
+    public function getResponseType()
+    {
+        return $this->responseType;
+    }
+
+    /**
+     * Set the response type of service
+     *
+     * @param string $responseType
+     * @return RestClient
+     */
+    public function setResponseType($responseType)
+    {
+        if (is_string($responseType)) {
+            if (class_exists($responseType) || class_exists(__NAMESPACE__.'\\'.$responseType)) {
+                $this->responseType = $responseType;
+            } else {
+                throw new ResultException('Unable to find class handle type of response: ' . $responseType);
+            }
+        } else {
+            throw new \InvalidArgumentException('Argument must be a string!');
+        }
+
+        return $this;
+    }
+
+    /**
      * Call a remote REST web service URI and return the Zend_Http_Response object
      *
-     * @param  string $path            The path to append to the URI
+     * @param string $path
+     *            The path to append to the URI
      * @throws Exception\UnexpectedValueException
      * @return void
      */
     protected function prepareRest($path)
     {
         // Get the URI object and configure it
-        if (!$this->uri instanceof Uri\Uri) {
+        if (! $this->uri instanceof Uri\Uri) {
             throw new Exception\UnexpectedValueException('URI object must be set before performing call');
         }
 
         $uri = $this->uri->toString();
 
-        if ($path[0] != '/' && $uri[strlen($uri)-1] != '/') {
+        if ($path[0] != '/' && $uri[strlen($uri) - 1] != '/') {
             $path = '/' . $path;
         }
 
         $this->uri->setPath($path);
 
         /**
-         * Get the HTTP client and configure it for the endpoint URI.  Do this
+         * Get the HTTP client and configure it for the endpoint URI.
+         * Do this
          * each time as the Zend\Http\Client instance may be shared with other
          * Zend\Service\AbstractService subclasses.
          */
@@ -141,7 +189,8 @@ class RestClient
      * Performs an HTTP GET request to the $path.
      *
      * @param string $path
-     * @param array  $query Array of GET parameters
+     * @param array $query
+     *            Array of GET parameters
      * @return Zend\Http\Response
      */
     public function restGet($path, array $query = null)
@@ -183,7 +232,8 @@ class RestClient
      * Performs an HTTP POST request to $path.
      *
      * @param string $path
-     * @param mixed $data Raw data to send
+     * @param mixed $data
+     *            Raw data to send
      * @return \Zend\Http\Response
      */
     public function restPost($path, $data = null)
@@ -196,7 +246,8 @@ class RestClient
      * Performs an HTTP PUT request to $path.
      *
      * @param string $path
-     * @param mixed $data Raw data to send in request
+     * @param mixed $data
+     *            Raw data to send in request
      * @return \Zend\Http\Response
      */
     public function restPut($path, $data = null)
@@ -214,7 +265,9 @@ class RestClient
     public function restDelete($path)
     {
         $this->prepareRest($path);
-        return $this->getHttpClient()->setMethod('DELETE')->send();
+        return $this->getHttpClient()
+            ->setMethod('DELETE')
+            ->send();
     }
 
     /**
@@ -233,44 +286,51 @@ class RestClient
      * $response = $rest->get();
      * </code>
      *
-     * @param string $method Method name
-     * @param array $args Method args
-     * @return \ZendRest\Client\RestClient_Result|\ZendRest\Client\RestClient \ZendRest\Client\RestClient if using
-     * a remote method, Zend_Rest_Client_Result if using an HTTP request method
+     * @param string $method
+     *            Method name
+     * @param array $args
+     *            Method args
+     * @return \ZendRest\Client\RestClient_Result \ZendRest\Client\RestClient if using
+     *         a remote method, Zend_Rest_Client_Result if using an HTTP request method
      */
     public function __call($method, $args)
     {
-        $methods = array('post', 'get', 'delete', 'put');
+        $methods = array(
+            'post',
+            'get',
+            'delete',
+            'put'
+        );
 
         if (in_array(strtolower($method), $methods)) {
-            if (!isset($args[0])) {
+            if (! isset($args[0])) {
                 $args[0] = $this->uri->getPath();
             }
             $this->data['rest'] = 1;
-            $data               = array_slice($args, 1) + $this->data;
-            $response           = $this->{'rest' . $method}($args[0], $data);
-            $this->data         = array(); //Initializes for next Rest method.
-            return new Result($response->getBody());
+            $data = array_slice($args, 1) + $this->data;
+            $response = $this->{'rest' . $method}($args[0], $data);
+            $this->data = array(); // Initializes for next Rest method.
+            return Result::parse($response->getBody(), $this->responseType);
         }
 
-			// More than one arg means it's definitely a Zend_Rest_Server
-			if (count($args) == 1) {
-				 // Uses first called function name as method name
-				 if (!isset($this->data['method'])) {
-					  $this->data['method'] = $method;
-					  $this->data['arg1']   = $args[0];
-				 }
-				 $this->data[$method]  = $args[0];
-			} else {
-				 $this->data['method'] = $method;
-				 if (count($args) > 0) {
-					  foreach ($args as $key => $arg) {
-							$key = 'arg' . $key;
-							$this->data[$key] = $arg;
-					  }
-				 }
-			}
+        // More than one arg means it's definitely a Zend_Rest_Server
+        if (count($args) == 1) {
+            // Uses first called function name as method name
+            if (! isset($this->data['method'])) {
+                $this->data['method'] = $method;
+                $this->data['arg1'] = $args[0];
+            }
+            $this->data[$method] = $args[0];
+        } else {
+            $this->data['method'] = $method;
+            if (count($args) > 0) {
+                foreach ($args as $key => $arg) {
+                    $key = 'arg' . $key;
+                    $this->data[$key] = $arg;
+                }
+            }
+        }
 
-			return $this;
+        return $this;
     }
 }
