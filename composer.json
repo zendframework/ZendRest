@@ -1,6 +1,6 @@
 {
     "name": "zendframework/zendrest",
-    "description": " ",
+    "description": "A REST client based on Zend Framework 2",
     "type": "library",
     "license": "BSD-3-Clause",
     "keywords": [
@@ -21,7 +21,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zend-http": "2.0.*",
-        "zendframework/zend-uri": "2.0.*"
+        "zendframework/zend-http": "2.*",
+        "zendframework/zend-uri": "2.*",
+        "zendframework/zend-json": "2.*"
     }
 }
