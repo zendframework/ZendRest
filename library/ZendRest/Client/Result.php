@@ -11,6 +11,7 @@
 namespace ZendRest\Client;
 
 use IteratorAggregate;
+use ZendXml\Security as XmlSecurity;
 
 /**
  * @category   Zend
@@ -40,7 +41,7 @@ class Result implements IteratorAggregate
     public function __construct($data)
     {
         set_error_handler(array($this, 'handleXmlErrors'));
-        $this->_sxml = simplexml_load_string($data);
+        $this->_sxml = XmlSecurity::scan($data);
         restore_error_handler();
         if($this->_sxml === false) {
             if ($this->_errstr === null) {
