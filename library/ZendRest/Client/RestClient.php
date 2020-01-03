@@ -142,7 +142,7 @@ class RestClient
      *
      * @param string $path
      * @param array  $query Array of GET parameters
-     * @return Zend\Http\Response
+     * @return \Zend\Http\Response
      */
     public function restGet($path, array $query = null)
     {
